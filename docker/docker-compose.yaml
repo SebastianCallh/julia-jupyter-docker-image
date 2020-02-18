@@ -1,0 +1,23 @@
+version: '3'
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - USER_ID=${USER_ID}
+        - USER_NAME=${PROJ_NAME}-user
+        - JULIA_VER=${JULIA_VER}
+        - JULIA_URL=${JULIA_URL}
+    ports:
+      - ${JUPYTER_PORT}:8888
+    user: ${USER_ID}:${USER_ID}
+    image: julia-${JULIA_VER}
+    command: jupyter lab --ip=* --no-browser --notebook-dir=/workspace
+    stdin_open: true
+    tty: true
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES}
+      - TF_FORCE_GPU_ALLOW_GROWTH=true
+    volumes:
+      - ..:/workspace
